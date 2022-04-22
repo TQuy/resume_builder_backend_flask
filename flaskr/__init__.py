@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 def create_app(test_config=None):
     # create and configure the app
@@ -10,7 +11,9 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         SQLALCHEMY_DATABASE_URI=os.path.join('sqlite:////home/quynt/Programming/sqlalchemy-tutorial/instance/test.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        SQLALCHEMY_ECHO=True,
     )
+    CORS(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
