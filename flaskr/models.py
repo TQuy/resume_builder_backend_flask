@@ -24,7 +24,7 @@ class Resume(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())    
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('posts', lazy='select'))
+    user = db.relationship('User', backref=db.backref('resumes', lazy='select'))
     __table_args__ = (db.UniqueConstraint('name', 'user_id', name='unique_resume__name_user'),)
 
 # class Resume(models.Model):
