@@ -3,10 +3,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.models import db, User
 from sqlalchemy.exc import IntegrityError
 from typing import Optional, Union
+from flask import current_app
+import jwt
+from flaskr.decorators import token_required
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/register', methods=('GET', 'POST'))
+@bp.route('/register/', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
         username = request.json['username']
@@ -44,11 +47,11 @@ def register():
             "message": "Method is not supported"
         }, 405
 
-@bp.route('/login', methods=('GET', 'POST'))
+@bp.route('/login/', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.json['username']
+        password = request.json['password']
 
         error = _validate_username_password(
             username=username,
@@ -67,16 +70,25 @@ def login():
                 "message": error
             }, 400
 
-        session.clear()
-        session['user_id'] = user.id
+        #send user token
+        token = jwt.encode(
+            {
+                "username": user.username,
+                "user_id": user.id,
+            }, 
+            current_app.config['SECRET_KEY'], 
+            algorithm="HS256"
+        )
         return {
-            "message": "OK"
+            "token": token
         }, 200
 
     else:
         return {
             "message": "Method is not supported"
         }, 405
+
+# ----------------------------------------
 
 def _validate_username_password(
     username: str, 
