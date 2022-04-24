@@ -4,12 +4,14 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI=os.path.join('sqlite:////home/quynt/Programming/sqlalchemy-tutorial/instance/test.db'),
+        SQLALCHEMY_DATABASE_URI=os.path.join(
+            'sqlite:////home/quynt/Programming/sqlalchemy-tutorial/instance/test.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
     )

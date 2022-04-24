@@ -1,3 +1,4 @@
 Flask-SQLAlchemy==2.5.1
 flask-cors
 pyjwt
+autopep8

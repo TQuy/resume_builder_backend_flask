@@ -9,6 +9,7 @@ from flaskr.decorators import token_required
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+
 @bp.route('/register/', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -25,14 +26,14 @@ def register():
         if error is None:
             try:
                 user = User(
-                    username = username,
-                    password = generate_password_hash(password),
+                    username=username,
+                    password=generate_password_hash(password),
                 )
                 db.session.add(user)
                 db.session.commit()
             except IntegrityError:
                 error = f"User {username} is already registered."
-        
+
         if error:
             return {
                 "message": error
@@ -41,11 +42,12 @@ def register():
         return {
             "message": "OK"
         }, 201
-            
+
     else:
         return {
             "message": "Method is not supported"
         }, 405
+
 
 @bp.route('/login/', methods=('GET', 'POST'))
 def login():
@@ -70,13 +72,13 @@ def login():
                 "message": error
             }, 400
 
-        #send user token
+        # send user token
         token = jwt.encode(
             {
                 "username": user.username,
                 "user_id": user.id,
-            }, 
-            current_app.config['SECRET_KEY'], 
+            },
+            current_app.config['SECRET_KEY'],
             algorithm="HS256"
         )
         return {
@@ -90,11 +92,12 @@ def login():
 
 # ----------------------------------------
 
+
 def _validate_username_password(
-    username: str, 
-    password: str, 
+    username: str,
+    password: str,
     confirm_password: Optional[str] = None,
-    ) -> Union[str, None]:
+) -> Union[str, None]:
     error = _check_required(username, password)
 
     if error:
@@ -104,10 +107,11 @@ def _validate_username_password(
         error = _check_confirm_password(password, confirm_password)
     return error
 
+
 def _check_required(
-    username: str, 
-    password: str, 
-    ) -> Union[str, None]:
+    username: str,
+    password: str,
+) -> Union[str, None]:
     '''
         Check if username and password attributes exist
     '''
@@ -120,10 +124,11 @@ def _check_required(
         error = 'Password is required.'
     return error
 
+
 def _check_confirm_password(
-    password: str, 
+    password: str,
     confirm_password: str,
-    ) -> Union[str, None]:
+) -> Union[str, None]:
     error = None
 
     if password != confirm_password:
