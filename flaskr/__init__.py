@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flaskr.models import db
-from . import auth 
+from . import auth
 from . import resume
 
 

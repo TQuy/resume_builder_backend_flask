@@ -1,13 +1,12 @@
-from flask import Blueprint, redirect, url_for, request, session, flash, render_template
+from flask import Blueprint, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.models import db, User
 from sqlalchemy.exc import IntegrityError
 from typing import Optional, Union
 from flask import current_app
 import jwt
-from flaskr.decorators import token_required
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/auth/')
 
 
 @bp.route('/register/', methods=('GET', 'POST'))

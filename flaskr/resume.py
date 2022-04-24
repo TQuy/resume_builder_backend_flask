@@ -5,11 +5,16 @@ from sqlalchemy import select
 
 bp = Blueprint('resume', __name__, url_prefix='/')
 
+
 @bp.route('/resumes/', methods=('GET',))
 @token_required
 def list_resume(current_user):
     if request.method == 'GET':
-        resume_list = db.session.execute(select(Resume.id, Resume.name).join(User).where(User.id==current_user.id)).all()
+        resume_list = db.session.execute(
+            select(
+                Resume.id,
+                Resume.name).join(User).where(
+                User.id == current_user.id)).all()
         resume_list = [dict(i) for i in resume_list]
         return jsonify({
             'content': resume_list,
