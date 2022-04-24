@@ -19,12 +19,13 @@ class User(db.Model):
 
 class Resume(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
+    name = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())    
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('posts', lazy='select'))
+    __table_args__ = (db.UniqueConstraint('name', 'user_id', name='unique_resume__name_user'),)
 
 # class Resume(models.Model):
 #     user = models.ForeignKey('User', on_delete=models.CASCADE)
