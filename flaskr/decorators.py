@@ -8,8 +8,8 @@ def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = None
-        if 'Authentication' in request.headers:
-            token = request.headers['Authentication']
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization']
 
         if not token:
             return jsonify({'message': 'A valid token is missing'})

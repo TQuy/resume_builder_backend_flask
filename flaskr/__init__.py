@@ -3,6 +3,9 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flaskr.models import db
+from . import auth 
+from . import resume
 
 
 def create_app(test_config=None):
@@ -35,9 +38,9 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
-    from .models import db
+    # from .auth import bp as auth.bp
     db.init_app(app)
-    from .auth import bp
     app.register_blueprint(auth.bp)
+    app.register_blueprint(resume.bp)
 
     return app
