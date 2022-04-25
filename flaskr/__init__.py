@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flaskr.models import db
+from flaskr.models import db, migrate
 from . import auth
 from . import resume
 
@@ -38,8 +38,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
-    # from .auth import bp as auth.bp
     db.init_app(app)
+    migrate.init_app(app, db)
     app.register_blueprint(auth.bp)
     app.register_blueprint(resume.bp)
 

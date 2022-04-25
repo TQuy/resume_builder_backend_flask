@@ -2,9 +2,11 @@ from email.policy import default
 from enum import unique
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 # from sqlalchemy import Column
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 class User(db.Model):
