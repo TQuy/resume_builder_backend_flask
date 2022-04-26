@@ -4,7 +4,6 @@ from flaskr.decorators import token_required
 from flaskr.models import db, User, Resume
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
-from icecream import ic
 
 bp = Blueprint('resume', __name__, url_prefix='/resume/')
 
