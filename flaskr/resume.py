@@ -31,8 +31,6 @@ def list_resume(current_user):
 @bp.route('<int:resume_id>/', methods=('GET',))
 @token_required
 def load_resume(current_user, resume_id):
-    ic(resume_id)
-    ic(current_user)
     if request.method == 'GET':
         try:
             resume = db.session.scalars(
@@ -60,9 +58,7 @@ def load_resume(current_user, resume_id):
 def save_resume(current_user):
     if request.method == 'POST':
         name = request.json.get('name', None)
-        ic(name)
         content = request.json.get('content', None)
-        ic(content)
         if name is None:
             return jsonify({
                 'message': 'Empty name value',
