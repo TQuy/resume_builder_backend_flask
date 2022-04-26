@@ -3,3 +3,5 @@ flask-cors
 pyjwt
 autopep8
 Flask-Migrate
+pytest
+coverage
