@@ -1,8 +1,9 @@
 import os
 import tempfile
 import pytest
-from flaskr  import create_app
+from flaskr import create_app
 from flaskr.models import db
+
 
 @pytest.fixture
 def app():
@@ -20,9 +21,11 @@ def app():
     os.close(db_fd)
     os.unlink(db_path)
 
+
 @pytest.fixture
 def client(app):
     return app.test_client()
+
 
 @pytest.fixture
 def runner(app):

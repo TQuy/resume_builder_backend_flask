@@ -3,6 +3,7 @@ import pytest
 from flaskr.models import *
 from sqlalchemy import select
 
+
 def test_register(client, app):
     username = 'a'
     password = 'a'
@@ -16,7 +17,7 @@ def test_register(client, app):
         assert db.session.scalar(select(User).where(User.username == 'a'))
 
     response = client.post(
-    '/auth/register/', json={'username': 'a', 'password': 'a', 'confirm_password': 'a'}
+        '/auth/register/', json={'username': 'a', 'password': 'a', 'confirm_password': 'a'}
     )
     assert response.status_code == 400
 
@@ -24,4 +25,3 @@ def test_register(client, app):
     assert message == f"User {username} is already registered."
 
 # def test_login(client, app):
-    
