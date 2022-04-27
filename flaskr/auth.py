@@ -9,7 +9,7 @@ import jwt
 bp = Blueprint('auth', __name__, url_prefix='/auth/')
 
 
-@bp.route('/register/', methods=('GET', 'POST'))
+@bp.route('/register/', methods=('POST',))
 def register():
     if request.method == 'POST':
         username = request.json['username']
@@ -48,7 +48,7 @@ def register():
         }, 405
 
 
-@bp.route('/login/', methods=('GET', 'POST'))
+@bp.route('/login/', methods=('POST',))
 def login():
     if request.method == 'POST':
         username = request.json['username']
