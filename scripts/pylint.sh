@@ -1,2 +1,2 @@
 #!/bin/sh
-autopep8 -r -v -i -a flaskr
+autopep8 --recursive --verbose --in-place --aggressive --exclude venv* .
