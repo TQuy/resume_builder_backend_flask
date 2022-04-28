@@ -4,7 +4,7 @@ from flaskr.models import *
 import jwt
 from flask import current_app
 
-from flaskr.repositories.user import insert_user, query_with_username
+from flaskr.repositories import user
 
 
 def register_user(username: Union[str, None], password: Union[str,
@@ -19,7 +19,7 @@ def register_user(username: Union[str, None], password: Union[str,
     )
     if not error:
 
-        error = insert_user(username, password)
+        error = user.insert_user(username, password)
 
     return error
 
@@ -29,15 +29,15 @@ def authenticate_user(username: str, password: str) -> Tuple[Any, str]:
         username=username,
         password=password,
     )
-    user = None
+    matched_user = None
     if not error:
-        user = query_with_username(username)
-        if user is None:
+        matched_user = user.filter_by_username(username)
+        if matched_user is None:
             error = "Incorrect username."
-        elif not check_password_hash(user.password, password):
+        elif not check_password_hash(matched_user.password, password):
             error = "Incorrect password."
 
-    return user, error
+    return matched_user, error
 
 
 def generate_jwt_token(user) -> str:

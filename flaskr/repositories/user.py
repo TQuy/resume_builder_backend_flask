@@ -16,12 +16,12 @@ def insert_user(username: str, password: str) -> str:
         db.session.commit()
         return message
     except IntegrityError:
-        message = f"Username already registered."   
+        message = f"Username already registered."
     except:
         message = "Unexpected error happened."
     return message
 
-def query_with_username(username: str):
+def filter_by_username(username: str):
     '''
         query row using username and password
     '''

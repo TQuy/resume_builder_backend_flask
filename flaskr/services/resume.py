@@ -3,15 +3,12 @@ from sqlalchemy import select
 from typing import Union
 from sqlalchemy.exc import NoResultFound
 import json
-from flask import jsonify
+
+from flaskr.repositories import resume
 
 
 def list_resume(current_user) -> list:
-    res = db.session.execute(
-        select(
-            Resume.id,
-            Resume.name).join(User).where(
-            User.id == current_user.id)).all()
+    res = resume.filter_by_user(current_user)
     if res is None:
         return []
     resume_list = [dict(i) for i in res]
@@ -19,29 +16,25 @@ def list_resume(current_user) -> list:
 
 
 def load_resume(current_user, resume_id):
-    resume = db.session.scalar(
-        select(Resume).where(
-            Resume.id == resume_id).where(
-            Resume.user_id == current_user.id)).first()
-    return resume
+    res = resume.filter_by_user_and_resume_id(current_user, resume_id)
+    return res
 
 
 def save_resume(current_user, name: str, content: str):
     existed = True
-    try:
-        resume = Resume.query.filter_by(user=current_user, name=name).one()
-    except NoResultFound:
-        resume = Resume(
+    updated_resume = resume.filter_by_user_and_name(current_user, name)
+    if not updated_resume:
+        updated_resume = Resume(
             name=name,
             user=current_user
         )
         existed = False
-    finally:
-        resume.content = json.dumps(content)
-        if existed:
-            db.session.add(resume)
-        db.session.commit()
-    return resume
+    
+    updated_resume.content = json.dumps(content)
+    if existed:
+        db.session.add(updated_resume)
+    db.session.commit()
+    return updated_resume
 
 
 def validate_input_save_form(
