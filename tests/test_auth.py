@@ -17,6 +17,13 @@ def test_register(client, app):
     with app.app_context():
         assert db.session.scalar(select(User).where(User.username == 'a'))
 
+    response = client.post(
+        '/auth/register/', json={'username': username, 'password': password, 'confirm_password': confirm_password}
+    )
+    assert response.status_code == 400
+    assert json.loads(response.data).get(
+        'message') == 'Username already registered.'
+
 
 @pytest.mark.parametrize(('username', 'password', 'confirm_password', 'message'), (
     ('', '', '', 'Username is required.'),
