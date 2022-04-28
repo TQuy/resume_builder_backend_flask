@@ -1,10 +1,10 @@
 from typing import Optional, Union, Any, Tuple
-from sqlalchemy.exc import IntegrityError
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from flaskr.models import *
 import jwt
 from flask import current_app
-from icecream import ic
+
+from flaskr.repositories.user import insert_user, query_with_username
 
 
 def register_user(username: Union[str, None], password: Union[str,
@@ -17,19 +17,11 @@ def register_user(username: Union[str, None], password: Union[str,
         password=password,
         confirm_password=confirm_password,
     )
-    if error is None:
+    if not error:
 
-        try:
-            user = User(
-                username=username,
-                password=generate_password_hash(password),
-            )
-            db.session.add(user)
-            db.session.commit()
-        except IntegrityError:
-            error = f"Username already registered."
+        error = insert_user(username, password)
 
-    return error if error else None
+    return error
 
 
 def authenticate_user(username: str, password: str) -> Tuple[Any, str]:
@@ -38,8 +30,8 @@ def authenticate_user(username: str, password: str) -> Tuple[Any, str]:
         password=password,
     )
     user = None
-    if error is None:
-        user = User.query.filter_by(username=username).first()
+    if not error:
+        user = query_with_username(username)
         if user is None:
             error = "Incorrect username."
         elif not check_password_hash(user.password, password):
@@ -64,7 +56,7 @@ def validate_username_password(
     username: Union[str, None],
     password: Union[str, None],
     confirm_password: Optional[str] = None,
-) -> Union[str, None]:
+) -> str:
     error = check_required(username, password)
 
     if error:
@@ -77,7 +69,7 @@ def validate_username_password(
 def check_required(
     username: Union[str, None],
     password: Union[str, None],
-) -> Union[str, None]:
+) -> str:
     '''
         Check if username and password attributes exist
     '''
@@ -86,14 +78,14 @@ def check_required(
 
     elif not password:
         return 'Password is required.'
-    return None
+    return ''
 
 
 def validate_confirm_password(
     password: str,
     confirm_password: str,
-) -> Union[str, None]:
-    error = None
+) -> str:
+    error = ''
     if password != confirm_password:
         error = "The password and confirm password are not the same."
     return error
