@@ -1,4 +1,3 @@
-import typing
 from flaskr.models import *
 from sqlalchemy import select
 from typing import Union
@@ -7,12 +6,14 @@ import json
 from flask import jsonify
 
 
-def list_resume(current_user):
+def list_resume(current_user) -> list:
     res = db.session.execute(
         select(
             Resume.id,
             Resume.name).join(User).where(
             User.id == current_user.id)).all()
+    if res is None:
+        return []
     resume_list = [dict(i) for i in res]
     return resume_list
 
