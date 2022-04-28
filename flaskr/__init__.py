@@ -3,8 +3,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flaskr.models import db, migrate
-from . import auth
-from . import resume
+from flaskr.api import auth, resume
 
 
 def create_app(test_config=None):
