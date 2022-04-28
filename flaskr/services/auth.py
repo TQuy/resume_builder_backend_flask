@@ -81,14 +81,12 @@ def check_required(
     '''
         Check if username and password attributes exist
     '''
-    error = None
-
     if not username:
-        error = 'Username is required.'
+        return 'Username is required.'
 
     elif not password:
-        error = 'Password is required.'
-    return error
+        return 'Password is required.'
+    return None
 
 
 def validate_confirm_password(
