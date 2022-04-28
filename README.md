@@ -1,5 +1,9 @@
-## Initializing sqlite database
->$ python -m flaskr.init_db 
+## Initialize sqlite database
+>$ ./scripts/init_db.sh
 ## Drop sqlite database
 Either delete the sqlite file, or run this command
->$ python -m flaskr.drop_db
+>$ ./scripts/drop_db.sh
+## Style python code
+>$ ./scripts/autopep8.sh
+## Run test
+>$ ./scripts/test.sh
