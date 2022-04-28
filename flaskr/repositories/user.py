@@ -2,6 +2,7 @@ from flaskr.models import *
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.exc import IntegrityError
 
+
 def insert_user(username: str, password: str) -> str:
     '''
         Insert row into table user
@@ -17,9 +18,10 @@ def insert_user(username: str, password: str) -> str:
         return message
     except IntegrityError:
         message = f"Username already registered."
-    except:
+    except BaseException:
         message = "Unexpected error happened."
     return message
+
 
 def filter_by_username(username: str):
     '''

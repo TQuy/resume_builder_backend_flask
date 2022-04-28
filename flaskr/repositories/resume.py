@@ -1,6 +1,7 @@
 from flaskr.models import *
 from sqlalchemy import select
 
+
 def filter_by_user(current_user):
     res = db.session.execute(
         select(
@@ -12,8 +13,10 @@ def filter_by_user(current_user):
     ).all()
     return res
 
+
 def filter_by_user_and_id(current_user, resume_id):
     return Resume.query.filter_by(id=resume_id, user=current_user).first()
+
 
 def filter_by_user_and_name(current_user, name):
     return Resume.query.filter_by(name=name, user=current_user).first()

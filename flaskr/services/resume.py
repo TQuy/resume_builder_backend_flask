@@ -29,7 +29,7 @@ def save_resume(current_user, name: str, content: str):
             user=current_user
         )
         existed = False
-    
+
     updated_resume.content = json.dumps(content)
     if existed:
         db.session.add(updated_resume)
