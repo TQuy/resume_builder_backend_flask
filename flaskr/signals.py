@@ -7,7 +7,7 @@ from flask import current_app
 
 @event.listens_for(User, 'after_insert')
 def sync_user(mapper, connection, target):
-    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     response = requests.post(f"{current_app.config.get('SLAVE_HOST')}auth/register/", json={
         'username': target.username,
@@ -20,7 +20,7 @@ def sync_user(mapper, connection, target):
 @event.listens_for(Resume, 'after_insert')
 @event.listens_for(Resume, 'after_update')
 def sync_saved_resume(mapper, connection, target):
-    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     token = get_token_from_resume(target)
     response = requests.post(
@@ -39,7 +39,7 @@ def sync_saved_resume(mapper, connection, target):
 
 @event.listens_for(Resume, 'after_delete')
 def sync_deleted_resume(mapper, connection, target):
-    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     token = get_token_from_resume(target)
     response = requests.delete(
@@ -52,7 +52,7 @@ def sync_deleted_resume(mapper, connection, target):
 
 
 def get_token_from_resume(resume) -> str:
-    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     current_user = User.query.filter_by(id=resume.user_id)
     token = generate_jwt_token(current_user)
