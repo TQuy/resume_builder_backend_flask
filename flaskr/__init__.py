@@ -18,7 +18,7 @@ def create_app(test_config=None):
         MASTER_SLAVE_RELATION="master",
         SLAVE_HOST="http://localhost:4000/"
     )
-    CORS(app)
+    CORS(app, origins=["http://localhost:3000"])
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

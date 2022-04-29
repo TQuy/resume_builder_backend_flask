@@ -43,7 +43,7 @@ def sync_deleted_resume(mapper, connection, target):
         return
     token = get_token_from_resume(target)
     response = requests.delete(
-        f"{current_app.config.get('SLAVE_HOST')}resume/save/{target.id}",
+        f"{current_app.config.get('SLAVE_HOST')}resume/delete/{target.id}/",
         headers={
             'Authorization': token,
         }
@@ -54,6 +54,6 @@ def sync_deleted_resume(mapper, connection, target):
 def get_token_from_resume(resume) -> str:
     if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
-    current_user = User.query.filter_by(id=resume.user_id)
+    current_user = User.query.filter_by(id=resume.user_id).one()
     token = generate_jwt_token(current_user)
     return token
