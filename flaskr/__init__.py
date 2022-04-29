@@ -15,6 +15,8 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI=f"sqlite:///{os.path.join(app.instance_path, 'sqlalchemy_tutorial.db')}",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
+        MASTER_SLAVE_RELATION="master",
+        SLAVE_HOST="http://localhost:4000/"
     )
     CORS(app)
 

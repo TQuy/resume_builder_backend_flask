@@ -2,13 +2,14 @@ from flaskr.models import User, Resume, db
 from flaskr.services.auth import generate_jwt_token
 from sqlalchemy import event
 import requests
-
-slave_host = "http://localhost:4000/"
+from flask import current_app
 
 
 @event.listens_for(User, 'after_insert')
 def sync_user(mapper, connection, target):
-    response = requests.post(f"{slave_host}auth/register/", json={
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+        return
+    response = requests.post(f"{current_app.config.get('SLAVE_HOST')}auth/register/", json={
         'username': target.username,
         'password': target.password,
         'confirm_password': target.password,
@@ -19,9 +20,11 @@ def sync_user(mapper, connection, target):
 @event.listens_for(Resume, 'after_insert')
 @event.listens_for(Resume, 'after_update')
 def sync_saved_resume(mapper, connection, target):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+        return
     token = get_token_from_resume(target)
     response = requests.post(
-        f"{slave_host}resume/save/",
+        f"{current_app.config.get('SLAVE_HOST')}resume/save/",
         headers={
             'Authorization': token,
         },
@@ -36,9 +39,11 @@ def sync_saved_resume(mapper, connection, target):
 
 @event.listens_for(Resume, 'after_delete')
 def sync_deleted_resume(mapper, connection, target):
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+        return
     token = get_token_from_resume(target)
     response = requests.delete(
-        f"{slave_host}resume/save/{target.id}",
+        f"{current_app.config.get('SLAVE_HOST')}resume/save/{target.id}",
         headers={
             'Authorization': token,
         }
@@ -47,6 +52,8 @@ def sync_deleted_resume(mapper, connection, target):
 
 
 def get_token_from_resume(resume) -> str:
+    if (current_app.config.get('MASTER_SLAVE_RELATION') == 'save'):
+        return
     current_user = User.query.filter_by(id=resume.user_id)
     token = generate_jwt_token(current_user)
     return token
