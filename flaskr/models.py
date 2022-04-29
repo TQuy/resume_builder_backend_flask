@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-# from sqlalchemy import Column
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -35,7 +34,7 @@ class Resume(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship(
         'User', backref=db.backref(
-            'resumes', lazy='select'))
+            'resumes', lazy='select', cascade="all, delete-orphan"))
     __table_args__ = (
         db.UniqueConstraint(
             'name',

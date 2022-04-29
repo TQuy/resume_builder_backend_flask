@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flaskr.models import db, migrate
 from flaskr.api import auth, resume
+from flaskr import signals
 
 
 def create_app(test_config=None):
