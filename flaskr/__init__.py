@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flaskr.models import db, migrate
 from flaskr.api import auth, resume
 from flaskr import signals
+from flaskr.consumers import consume_user
 
 
 def create_app(test_config=None):
@@ -16,7 +17,8 @@ def create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
         MASTER_SLAVE_RELATION="master",
-        SLAVE_HOST="http://localhost:4000/"
+        SLAVE_HOST="http://localhost:4000/",
+        KAFKA_HOST="localhost:9092",
     )
     CORS(app, origins=["http://localhost:3000"])
 
@@ -42,5 +44,6 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
     app.register_blueprint(auth.bp)
     app.register_blueprint(resume.bp)
+    consume_user(app)
 
     return app

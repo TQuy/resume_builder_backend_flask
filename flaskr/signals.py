@@ -3,52 +3,45 @@ from flaskr.services.auth import generate_jwt_token
 from sqlalchemy import event
 import requests
 from flask import current_app
+from flaskr.producers import producer
 
 
 @event.listens_for(User, 'after_insert')
-def sync_user(mapper, connection, target):
+def async_user(mapper, connection, target):
     if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
-    response = requests.post(f"{current_app.config.get('SLAVE_HOST')}auth/register/", json={
+    future = producer.send('user', {
         'username': target.username,
         'password': target.password,
         'confirm_password': target.password,
     })
-    assert response.status_code == 201
+    assert future.is_done is True
 
 
 @event.listens_for(Resume, 'after_insert')
 @event.listens_for(Resume, 'after_update')
-def sync_saved_resume(mapper, connection, target):
+def async_saved_resume(mapper, connection, target):
     if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     token = get_token_from_resume(target)
-    response = requests.post(
-        f"{current_app.config.get('SLAVE_HOST')}resume/save/",
-        headers={
-            'Authorization': token,
-        },
-        json={
-            'name': target.name,
-            'content': target.content,
-            'user_id': target.user_id,
-        },
-    )
-    assert response.status_code == 200
+    future = producer.send('updated_resume', {
+        'Authorization': token,
+        'name': target.name,
+        'content': target.content,
+        'user_id': target.user_id,
+    })
+    assert future.is_done is True
 
 
 @event.listens_for(Resume, 'after_delete')
-def sync_deleted_resume(mapper, connection, target):
+def async_deleted_resume(mapper, connection, target):
     if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
     token = get_token_from_resume(target)
-    response = requests.delete(
-        f"{current_app.config.get('SLAVE_HOST')}resume/delete/{target.id}/",
-        headers={
-            'Authorization': token,
-        }
-    )
-    assert response.status_code == 200
+    future = producer.send('updated_resume', {
+        'Authorization': token,
+    })
+    assert future.is_done is True
 
 
 def get_token_from_resume(resume) -> str:
