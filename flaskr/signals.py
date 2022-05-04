@@ -6,6 +6,7 @@ from flaskr.producers import producer
 from datetime import datetime
 from time import sleep
 
+
 @event.listens_for(User, 'after_insert')
 def async_user(mapper, connection, target):
     print("-------------------------------------")
