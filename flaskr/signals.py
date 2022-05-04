@@ -9,17 +9,16 @@ from time import sleep
 
 @event.listens_for(User, 'after_insert')
 def async_user(mapper, connection, target):
-    print("-------------------------------------")
     if (current_app.config.get('MASTER_SLAVE_RELATION') == 'slave'):
         return
-    # future = producer.send('user', {
-    #     'username': target.username,
-    #     'password': target.password,
-    #     'confirm_password': target.password,
-    # })
-    timestampEvent = datetime.now().strftime("%H:%M:%S")
-    print("Sending: " + timestampEvent)
-    future = producer.send('timestamp', timestampEvent)
+    future = producer.send('user', {
+        'username': target.username,
+        'password': target.password,
+        'confirm_password': target.password,
+    })
+    # timestampEvent = datetime.now().strftime("%H:%M:%S")
+    # print("Sending: " + timestampEvent)
+    # future = producer.send('timestamp', timestampEvent)
     sleep(5)
     assert future.is_done is True
 
