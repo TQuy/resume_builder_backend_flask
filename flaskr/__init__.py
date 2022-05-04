@@ -6,7 +6,7 @@ from flaskr.models import db, migrate
 from flaskr.api import auth, resume
 from flaskr import signals
 from config import DevConfig
-from consumers import consumer_user
+from flaskr.consumers import consumer_user
 
 
 def create_app(test_config=None):
