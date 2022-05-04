@@ -2,11 +2,10 @@ import json
 from kafka import KafkaProducer
 from datetime import datetime
 from time import sleep
-from flask import current_app
-
+from config import DevConfig
 
 producer = KafkaProducer(
-    bootstrap_servers=current_app.config.get('KAFKA_HOST'),
+    bootstrap_servers=DevConfig.KAFKA_HOST,
     # x is dictionary
     value_serializer=lambda x: json.dumps(x).encode('utf-8'),
 )
