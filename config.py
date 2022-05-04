@@ -7,5 +7,6 @@ class DevConfig():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     MASTER_SLAVE_RELATION = "master"
+    # MASTER_SLAVE_RELATION = "slave"
     SLAVE_HOST = "http://localhost:4000/"
     KAFKA_HOST = "localhost:9092"
