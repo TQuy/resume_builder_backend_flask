@@ -12,15 +12,15 @@
 3. Use `flask db upgrade <current_version>:<next_version> --sql` to see the SQL commands needed for the migration.
 4. In case you screw up by `dropping table` manually, change the migration version manually in `alembic_version` table.
 
+## Initialize sqlite database
+>$ ./scripts/init_db.sh
+
 ## Start the application
 ```
 $ export FLASK_ENV=development
 $ export FLASK_APP=flaskr
 $ flask run --port 5000
 ```
-
-## Initialize sqlite database
->$ ./scripts/init_db.sh
 ## Drop sqlite database
 Either delete the sqlite file, or run this command
 >$ ./scripts/drop_db.sh
