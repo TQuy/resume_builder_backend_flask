@@ -7,8 +7,8 @@ from flask import current_app
 from flaskr.repositories import user
 
 
-def register_user(username: Union[str, None], password: Union[str,
-                  None], confirm_password: Union[str, None]) -> Union[str, None]:
+def handle_register_user(username: Union[str, None], password: Union[str,
+                                                                     None], confirm_password: Union[str, None]) -> Union[str, None]:
     '''
     handle register logic
     '''

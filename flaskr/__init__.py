@@ -4,8 +4,9 @@ from flask import Flask
 from flask_cors import CORS
 from flaskr.models import db, migrate
 from flaskr.api import auth, resume
-from flaskr import signals
+# from flaskr import signals
 from config import DevConfig
+from .api import authenticate_api
 
 
 def create_app(test_config=None):
@@ -38,7 +39,8 @@ def create_app(test_config=None):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    app.register_blueprint(auth.bp)
+    authenticate_api.init_app(app)
+    # app.register_blueprint(auth.bp)
     app.register_blueprint(resume.bp)
 
     return app

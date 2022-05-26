@@ -11,5 +11,6 @@ class DevConfig():
     SLAVE_HOST = "http://localhost:4000/"
     KAFKA_HOST = "localhost:9092"
 
+
 class ConsumerConfig():
     SLAVE_HOST = 'http://localhost:4000/'
