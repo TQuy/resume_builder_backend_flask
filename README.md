@@ -3,7 +3,22 @@
 2. The package [flask-restplus][flask-restplus] is no longer maintained (I tried integrating the latest version of the package with this project but failed). You can work around by either downgrading the package version, or use [flask-restx][flask-restx] like I did.
 3. Some functions which interact with databases (for example) need application context. View `flaskr/test.ipynb` to see how to use application context in your flask shell (use vscode's jupyter notebook to view).
 4. [Flask][flask] and its extensions were released 6 years after [Django][django] but have older python coding style, and their documentations (whether by code or by articles) are poor compared to [Django][django]. However, they are more flexible. I don't feel being tied to OOP when using [Flask][flask]. 
-
+## How to start this project
+### Initialize sqlite database
+>$ ./scripts/init_db.sh
+### Start the application
+```
+$ export FLASK_ENV=development
+$ export FLASK_APP=flaskr
+$ flask run --port 5000
+```
+### Drop sqlite database
+Either delete the sqlite file, or run this command
+>$ ./scripts/drop_db.sh
+### Style python code
+>$ ./scripts/autopep8.sh
+### Run test
+>$ ./scripts/test.sh
 ## Database Migration
 1. In case of **creating/altering** sqlalchemy model, use command `flask db revision` to create migration file, then edit it. I tried using `flask db migrate` but the auto-generated migration file has no information related to the newly created/modified model.
 5. Use `existing_*` parameters for fields you don't intend to modify, when writing migration file.
@@ -11,24 +26,6 @@
 3. To view the current migration version, use `flask db current` or see `alembic_version` table.
 3. Use `flask db upgrade <current_version>:<next_version> --sql` to see the SQL commands needed for the migration.
 4. In case you screw up by `dropping table` manually, change the migration version manually in `alembic_version` table.
-
-## Initialize sqlite database
->$ ./scripts/init_db.sh
-
-## Start the application
-```
-$ export FLASK_ENV=development
-$ export FLASK_APP=flaskr
-$ flask run --port 5000
-```
-## Drop sqlite database
-Either delete the sqlite file, or run this command
->$ ./scripts/drop_db.sh
-## Style python code
->$ ./scripts/autopep8.sh
-## Run test
->$ ./scripts/test.sh
-
 ## API Documents
 Utilizing [flask-restx][flask-restx] or [flask-restplus][flask-restplus] to document the APIs. The APIs documents of this project is located in `localhost:5000/api/`.
 
@@ -56,6 +53,10 @@ I didn't include `Kafka` here, you can use Docker Container to run one.
 [django]: https://www.djangoproject.com/
 
 ## Working with FMS project
-Since I avoid modifying FMS project so I leave it here.
+Since I avoid modifying FMS project so I leave it here.  
+This project is a legacy one (started around 2019), but its document and tests are insuffient. During my probation period, I keep hearing about the tale of `Kiet`, who created two more tasks upon working on one task related to this project. As a person who also face a lot hardship working on this project, and can sympathy for `Kiet` somehow, I will try to leave some docs related to FMS project, so that the next person working on this won't be like us.
+
 1. After setting up **FMS** project following [FMS Getting Started](https://confluence.teko.vn/display/AS/FMS+Getting+started) (some packages in `requirements.txt` needs to be removed). You can see list of API and their information by run the command `flask run`, then follow the link `localhost:5000/api/` 
-2. This project is a legacy one (started around 2019), but its document and tests are insuffient. During my probation period, I keep hearing about the tale of `Kiet`, who created two more tasks upon working on one task related to this project. As a person who also face a lot hardship working on this project, and can sympathy for `Kiet` somehow, I will try to leave some docs related to FMS project, so that the next person working on this won't be like us.
+2. To be able to login `localhost:5000/admin/`  
+    1. You need to insert your work account into `fms.users` table.
+    2. Login with `ISO` option in `localhost:5000/admin/`.
