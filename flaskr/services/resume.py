@@ -22,7 +22,8 @@ def load_resume(current_user, resume_id):
 
 def save_resume(current_user, name: str, content: str):
     existed = True
-    updated_resume = resume.filter_by_user_and_name(current_user, name)
+    updated_resume = Resume.query.filter_by(
+        name=name, user=current_user).first()
     if not updated_resume:
         updated_resume = Resume(
             name=name,

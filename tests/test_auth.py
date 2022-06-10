@@ -8,9 +8,8 @@ def test_register(client, app):
 
     username = 'a'
     password = 'a'
-    confirm_password = password
     response = client.post(
-        '/auth/register/', json={'username': username, 'password': password, 'confirm_password': confirm_password}
+        '/auth/register/', json={'username': username, 'password': password}
     )
     assert response.status_code == 201
 
@@ -18,22 +17,21 @@ def test_register(client, app):
         assert db.session.scalar(select(User).where(User.username == 'a'))
 
     response = client.post(
-        '/auth/register/', json={'username': username, 'password': password, 'confirm_password': confirm_password}
+        '/auth/register/', json={'username': username, 'password': password}
     )
     assert response.status_code == 400
     assert json.loads(response.data).get(
         'message') == 'Username already registered.'
 
 
-@pytest.mark.parametrize(('username', 'password', 'confirm_password', 'message'), (
-    ('', '', '', 'Username is required.'),
-    ('a', '', '', 'Password is required.'),
-    ('a', 'a', '', 'The password and confirm password are not the same.')
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('', '', 'Username is required.'),
+    ('a', '', 'Password is required.'),
 ))
 def test_register_validate_input(
-        client, username, password, confirm_password, message):
+        client, username, password, message):
     response = client.post(
-        '/auth/register/', json={'username': username, 'password': password, 'confirm_password': confirm_password}
+        '/auth/register/', json={'username': username, 'password': password}
     )
     assert message == json.loads(response.data).get('message')
 
@@ -70,7 +68,6 @@ def test_login_wrong_method(client):
 
 # --------------------------------------------------------------------------
 
-
 class AuthUser():
     def __init__(self, client, username, password):
         self._client = client
@@ -80,7 +77,7 @@ class AuthUser():
 
     def register(self):
         response = self._client.post(
-            '/auth/register/', json={'username': self.username, 'password': self.password, 'confirm_password': self.password}
+            '/auth/register/', json={'username': self.username, 'password': self.password}
         )
         assert response.status_code == 201
 

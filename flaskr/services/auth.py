@@ -3,44 +3,51 @@ from werkzeug.security import check_password_hash
 from flaskr.models import *
 import jwt
 from flask import current_app
-
 from flaskr.repositories import user
+from flaskr.models import User
 
 
-def handle_register_user(username: Union[str, None], password: Union[str,
-                                                                     None], confirm_password: Union[str, None]) -> Union[str, None]:
+def handle_register_user(
+    username: Union[str, None],
+    password: Union[str, None],
+) -> str:
     '''
-    handle register logic
+    handle registration logic
     '''
-    error = validate_username_password(
-        username=username,
-        password=password,
-        confirm_password=confirm_password,
-    )
-    if not error:
+    if not username:
+        return 'Username is required.'
 
-        error = user.insert_user(username, password)
+    elif not password:
+        return 'Password is required.'
 
-    return error
+    return user.insert_user(username, password)
 
 
-def authenticate_user(username: str, password: str) -> Tuple[Any, str]:
-    error = validate_username_password(
-        username=username,
-        password=password,
-    )
-    matched_user = None
-    if not error:
-        matched_user = user.filter_by_username(username)
-        if matched_user is None:
-            error = "Incorrect username."
-        elif not check_password_hash(matched_user.password, password):
-            error = "Incorrect password."
+def authenticate_user(
+    username: Union[str, None],
+    password: Union[str, None]
+) -> Tuple[Union[None, User], str]:
+    """
+    Return models.User object if authenticate successfully
+    else return error message
+    """
+    if not username:
+        return None, 'Username is required.'
 
-    return matched_user, error
+    elif not password:
+        return None, 'Password is required.'
+
+    message = ""
+    matched_user = User.query.filter_by(username=username).first()
+    if matched_user is None:
+        message = "Incorrect username."
+    elif check_password_hash(matched_user.password, password) is None:
+        message = "Incorrect password."
+
+    return matched_user, message
 
 
-def generate_jwt_token(user) -> str:
+def generate_jwt_token(user: User) -> str:
     token = jwt.encode(
         {
             "username": user.username,
@@ -50,42 +57,3 @@ def generate_jwt_token(user) -> str:
         algorithm="HS256"
     )
     return token
-
-
-def validate_username_password(
-    username: Union[str, None],
-    password: Union[str, None],
-    confirm_password: Optional[str] = None,
-) -> str:
-    error = check_required(username, password)
-
-    if error:
-        return error
-    if isinstance(confirm_password, str):
-        error = validate_confirm_password(password, confirm_password)
-    return error
-
-
-def check_required(
-    username: Union[str, None],
-    password: Union[str, None],
-) -> str:
-    '''
-        Check if username and password attributes exist
-    '''
-    if not username:
-        return 'Username is required.'
-
-    elif not password:
-        return 'Password is required.'
-    return ''
-
-
-def validate_confirm_password(
-    password: str,
-    confirm_password: str,
-) -> str:
-    error = ''
-    if password != confirm_password:
-        error = "The password and confirm password are not the same."
-    return error

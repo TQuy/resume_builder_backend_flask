@@ -1,10 +1,9 @@
-from sys import prefix
 from flask_restx import Api
-from .auth import ns
+from flaskr.api import auth
 
 authenticate_api = Api(
     title='APIs',
     doc='/api/'
 )
 
-authenticate_api.add_namespace(ns, path='/api/auth/')
+authenticate_api.add_namespace(auth.ns, path='/auth/')

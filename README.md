@@ -2,23 +2,25 @@
 1. Basic setup of Flask project with its extensions ([Flask-SQLAlchemy][flask-sqlalchemy], [Flask-Migrate][flask-migrate], [Flask-CORS][flask-cors], [flask-restx][flask-restx], ...), following [Application Factories][application-factories] structure, can be seen in this sample project. Start reading from `flaskr/__init__.py` file.
 2. The package [flask-restplus][flask-restplus] is no longer maintained (I tried integrating the latest version of the package with this project but failed). You can work around by either downgrading the package version, or use [flask-restx][flask-restx] like I did.
 3. Some functions which interact with databases (for example) need application context. View `flaskr/test.ipynb` to see how to use application context in your flask shell (use vscode's jupyter notebook to view).
-4. [Flask][flask] and its extensions were released 6 years after [Django][django] but have older python coding style, and their documentations (whether by code or by articles) are poor compared to [Django][django]. However, they are more flexible. I don't feel being tied to OOP when using [Flask][flask]. 
+4. [Flask][flask] and its extensions were released 6 years after [Django][django] but have older python coding style, and their documentations (whether by code or by articles) are poor compared to [Django][django]. However, they are more flexible.
 ## How to start this project
 ### Initialize sqlite database
->$ ./scripts/init_db.sh
+>./scripts/init_db.sh
 ### Start the application
-```
-$ export FLASK_ENV=development
-$ export FLASK_APP=flaskr
-$ flask run --port 5000
-```
+>export FLASK_ENV=development  
+>export FLASK_APP=flaskr  
+>flask run --port 5000
+
 ### Drop sqlite database
 Either delete the sqlite file, or run this command
->$ ./scripts/drop_db.sh
+>./scripts/drop_db.sh
 ### Style python code
->$ ./scripts/autopep8.sh
+>./scripts/autopep8.sh
 ### Run test
->$ ./scripts/test.sh
+>./scripts/test.sh
+### Get coverage report
+>coverage run -m pytest  
+>coverage report
 ## Database Migration
 1. In case of **creating/altering** sqlalchemy model, use command `flask db revision` to create migration file, then edit it. I tried using `flask db migrate` but the auto-generated migration file has no information related to the newly created/modified model.
 5. Use `existing_*` parameters for fields you don't intend to modify, when writing migration file.

@@ -7,7 +7,7 @@ def insert_user(username: str, password: str) -> str:
     '''
         Insert row into table user
     '''
-    message = ''
+    message = ""
     try:
         user = User(
             username=username,
@@ -15,16 +15,8 @@ def insert_user(username: str, password: str) -> str:
         )
         db.session.add(user)
         db.session.commit()
-        return message
     except IntegrityError:
         message = f"Username already registered."
     except BaseException:
         message = "Unexpected error happened."
     return message
-
-
-def filter_by_username(username: str):
-    '''
-        query row using username and password
-    '''
-    return User.query.filter_by(username=username).first()

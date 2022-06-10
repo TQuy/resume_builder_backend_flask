@@ -11,10 +11,6 @@ login_args = ns.model('login_arguments', {
     'password': fields.String(requried=True, example='1'),
 })
 
-register_args = ns.inherit('register_argument', login_args, {
-    'confirm_password': fields.String(required=True, example='1')
-})
-
 message_only_response = ns.model('register_return', {
     'message': fields.String(required=True, example='OK')
 })
@@ -35,16 +31,16 @@ class Register(Resource):
     Register user account
     '''
     # @ns.doc(params={'id': 'An ID'})
-    @ns.expect(register_args)
+    @ns.expect(login_args)
     @ns.marshal_with(message_only_response)
     def post(self):
-        username = request.json.get('username')
-        password = request.json.get('password')
-        confirm_password = request.json.get('confirm_password')
-        error = handle_register_user(username, password, confirm_password)
-        if error:
+        username: str = request.json.get('username')
+        password: str = request.json.get('password')
+        message = handle_register_user(username, password)
+
+        if message != "":
             return {
-                "message": error
+                "message": message
             }, 400
 
         return {
@@ -61,15 +57,16 @@ class Login(Resource):
         username = request.json.get('username')
         password = request.json.get('password')
 
-        user, error = authenticate_user(username, password)
+        user, message = authenticate_user(username, password)
 
-        if error:
+        if user is None:
             return {
                 "token": None,
-                "message": error
+                "message": message
             }, 400
 
         token = generate_jwt_token(user)
+
         return {
             "token": token,
             "message": "OK",
