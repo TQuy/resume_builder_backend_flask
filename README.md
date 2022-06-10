@@ -51,12 +51,3 @@ I didn't include `Kafka` here, you can use Docker Container to run one.
 [flask-restx]: https://flask-restx.readthedocs.io/en/latest/  
 [flask-restplus]: https://flask-restplus.readthedocs.io/en/stable/  
 [django]: https://www.djangoproject.com/
-
-## Working with FMS project
-Since I avoid modifying FMS project so I leave it here.  
-This project is a legacy one (started around 2019), but its document and tests are insuffient. During my probation period, I keep hearing about the tale of `Kiet`, who created two more tasks upon working on one task related to this project. As a person who also face a lot hardship working on this project, and can sympathy for `Kiet` somehow, I will try to leave some docs related to FMS project, so that the next person working on this won't be like us.
-
-1. After setting up **FMS** project following [FMS Getting Started](https://confluence.teko.vn/display/AS/FMS+Getting+started) (some packages in `requirements.txt` needs to be removed). You can see list of API and their information by run the command `flask run`, then follow the link `localhost:5000/api/` 
-2. To be able to login `localhost:5000/admin/`  
-    1. You need to insert your work account into `fms.users` table.
-    2. Login with `ISO` option in `localhost:5000/admin/`.
